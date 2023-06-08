@@ -25,25 +25,36 @@ params:
 - address OPTIONAL
 - phone OPTIONAL
 - note
+
 example: localhost:8080/task2/guestforms?name=pascal&address=alam sutera&phone=0812&note=hello
+
 create guest and/or note
 
 2. GET localhost:8080/task2/note
+
 params: NONE
+
 example: localhost:8080/task2/note
+
 get all notes created with its author
 
 ADMIN API
+
 all APIs below are only accesible to admin, must provide admin credentials (name & password), default is 
-name: admin
-password: password
+
+-name: admin
+-password: password
 
 3. POST localhost:8080/task2/admin
+
 params: 
 - adminname
 - password
 - newadminname
 - newpassword
+
+example: localhost:8080/task2/admin?adminname=admin&password=password&newadminname=admin2&newpassword=password2
+
 create new admin
 
 5. GET localhost:8080/task2/admin/note
