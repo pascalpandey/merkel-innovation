@@ -36,7 +36,7 @@ app.post("/task2/guestforms", async (req, res) => {
         name: name,
       },
     });
-    console.log(guest)
+
     // guest not yet registered
     if (!guest) {
       await prisma.guest.create({
