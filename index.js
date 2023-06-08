@@ -65,7 +65,7 @@ app.post("/task2/guestforms", async (req, res) => {
   }
 });
 
-app.get("/task2/guestforms", async (req, res) => {
+app.get("/task2/note", async (req, res) => {
   const out = await prisma.note.findMany({});
   res.send(out);
 });
@@ -73,22 +73,41 @@ app.get("/task2/guestforms", async (req, res) => {
 
 // admin endpoints
 async function validateAdmin(name, password) {
-  const admin = await prisma.admin.findUnique({
+  const adminFound = await prisma.admin.findUnique({
     where: {
       name: name,
     },
   });
-  if (admin.password === password) {
+  if (adminFound.password === password) {
     return true;
   } else {
-    false;
+    return false;
   }
 }
 
+app.post("/task2/admin", async (req, res) => {
+  const { adminname, password, newadminname, newpassword } = req.query;
+  if (await validateAdmin(adminname, password)) {
+    await prisma.admin.create({
+      data: {
+        name: newadminname,
+        password: newpassword,
+      }
+    });
+    res.status(200).json({message: 'new admin created'});
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+});
+
 app.get("/task2/admin/note", async (req, res) => {
   const { adminname, password } = req.query;
-  if (validateAdmin(adminname, password)) {
-    const out = await prisma.note.findMany({});
+  if (await validateAdmin(adminname, password)) {
+    const out = await prisma.note.findMany({
+      include: {
+        author: true
+      }
+    });
     res.send(out);
   } else {
     res.status(401).json({ error: "Unauthorized" });
@@ -97,7 +116,7 @@ app.get("/task2/admin/note", async (req, res) => {
 
 app.get("/task2/admin/guest", async (req, res) => {
   const { adminname, password } = req.query;
-  if (validateAdmin(adminname, password)) {
+  if (await validateAdmin(adminname, password)) {
     const out = await prisma.guest.findMany({
       include: {
         notes: true
@@ -111,11 +130,11 @@ app.get("/task2/admin/guest", async (req, res) => {
 
 app.delete("/task2/admin/note", async (req, res) => {
   const { adminname, password, noteid } = req.query;
-  if (validateAdmin(adminname, password)) {
+  if (await validateAdmin(adminname, password)) {
     try {
       await prisma.note.delete({
         where: {
-          id: noteid,
+          id: Number(noteid),
         },
       });
       res.status(200).json({ message: "note delete success" });
@@ -128,24 +147,24 @@ app.delete("/task2/admin/note", async (req, res) => {
   }
 });
 
-// app.delete("/task2/admin/guest", async (req, res) => {
-//   const { adminname, password, guestname } = req.query;
-//   if (validateAdmin(adminname, password)) {
-//     try {
-//       await prisma.guest.delete({
-//         where: {
-//           name: guestname,
-//         },
-//       });
-//       res.status(200).json({ message: "guest delete success" });
-//     } catch (error) {
-//       console.log(error);
-//       res.status(400).json({ error: "Bad input" });
-//     }
-//   } else {
-//     res.status(401).json({ error: "Unauthorized" });
-//   }
-// });
+app.delete("/task2/admin/guest", async (req, res) => {
+  const { adminname, password, guestname } = req.query;
+  if (await validateAdmin(adminname, password)) {
+    try {
+      await prisma.guest.delete({
+        where: {
+          name: guestname,
+        },
+      });
+      res.status(200).json({ message: "guest delete success" });
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: "Bad input" });
+    }
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+});
 
 
 const port = process.env.PORT || 8080;
