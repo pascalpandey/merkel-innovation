@@ -1,5 +1,9 @@
 ﻿# merkel-innovation
 Install: npm install
+
+npx prisma generate
+
+npx prisma studio -> see the db
 </br></br></br>
 Tech used:
 - express
