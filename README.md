@@ -43,6 +43,7 @@ ADMIN API
 all APIs below are only accesible to admin, must provide admin credentials (name & password), default is 
 
 -name: admin
+
 -password: password
 
 3. POST localhost:8080/task2/admin
@@ -58,33 +59,45 @@ example: localhost:8080/task2/admin?adminname=admin&password=password&newadminna
 create new admin
 
 5. GET localhost:8080/task2/admin/note
+
 params: 
 - adminname
 - password
+
 example: localhost:8080/task2/admin/note?adminname=admin&password=password
+
 get all notes created with its author
 
 6. GET localhost:8080/task2/admin/guest
+
 params: 
 - adminname
 - password
+
 example: localhost:8080/task2/admin/guest?adminname=admin&password=password
+
 get all guests
 
 7. DELETE localhost:8080/task2/admin/note
+
 params: 
 - adminname
 - password
 - noteid
+
 example: localhost:8080/task2/admin/note?adminname=admin&password=password&noteid=1
+
 delete specific note based on noteid
 
 8. DELETE localhost:8080/task2/admin/guest
+
 params: 
 - adminname
 - password
 - guestname
+
 example: localhost:8080/task2/admin/guest?adminname=admin&password=password&guestname=pascal
+
 delete specific guest based on guestname
 
 
