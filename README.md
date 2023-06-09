@@ -1,5 +1,9 @@
 ﻿# merkel-innovation
-Install: npm install
+Install: 
+
+npm install
+
+download .env and put it in the root directory
 
 npx prisma generate
 
